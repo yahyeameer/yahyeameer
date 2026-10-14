@@ -316,18 +316,7 @@ Teacher and student dashboards with attendance, scheduling and progress tracking
 <p align="center">
   <a href="https://yahyeameer.github.io/yahyeameer/catch/"><img src="assets/catch-banner.svg" width="100%" alt="Catch Me If You Can — click to play"/></a>
 </p>
-<p align="center"><sub>Opens instantly in your browser — works with a mouse or by tapping on your phone.</sub></p>
-
-### ❌⭕ Tic-Tac-Toe vs. my bot
-
-<p align="center"><sub>Click a square → GitHub opens an issue → press <b>Create</b> → a GitHub Action plays my move and updates this board in about a minute.</sub></p>
-
-<!-- TTT:START -->
-<p align="center"><b>Your turn!</b> You are ❌. Click any ⬜ square to play — I'm ⭕ and I reply automatically.</p>
-<table align="center"><tr><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C0"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C1"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C2"><h1>⬜</h1></a></td></tr><tr><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C3"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C4"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C5"><h1>⬜</h1></a></td></tr><tr><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C6"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C7"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C8"><h1>⬜</h1></a></td></tr></table>
-<p align="center"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cnew"><img src="https://img.shields.io/badge/🔄_New_game-24c6dc?style=for-the-badge" alt="New game"/></a></p>
-<p align="center"><sub>🏆 Humans won: <b>0</b> · 🤖 Bot won: <b>0</b> · 🤝 Draws: <b>0</b><br/>Recent players: <a href="https://github.com/yahyeameer">@yahyeameer</a></sub></p>
-<!-- TTT:END -->
+<p align="center"><sub>Combos, a golden 👑 mouse, trash talk and roasts if you miss. Works with a mouse or by tapping on your phone.</sub></p>
 
 ### 🧠 Quick quiz — click to reveal
 

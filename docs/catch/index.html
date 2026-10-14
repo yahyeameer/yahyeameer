@@ -4,91 +4,198 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Catch Me If You Can — Yahye Mohamed Awil</title>
-<meta name="description" content="A tiny game from Yahye's GitHub profile: catch the mouse before time runs out.">
+<meta name="description" content="Catch the mouse before time runs out. Miss, and you get roasted.">
+<meta name="theme-color" content="#0f0c29">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐭</text></svg>">
 <style>
   :root {
-    --bg1: #0f0c29; --bg2: #302b63; --cyan: #24c6dc; --purple: #8a2be2;
-    --coral: #ff6b6b; --gold: #f7b731; --text: #e6f7fb; --muted: #9fb3c8;
+    --bg1: #07051a; --bg2: #1d1650; --cyan: #24c6dc; --purple: #8a2be2; --pink: #ff4fd8;
+    --coral: #ff6b6b; --gold: #f7b731; --lime: #7CFFB2; --text: #eef9fc; --muted: #a9bdd2;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; height: 100%; overflow: hidden; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    color: var(--text);
-    background: radial-gradient(circle at 20% 15%, rgba(138,43,226,.35), transparent 45%),
-                radial-gradient(circle at 85% 80%, rgba(36,198,220,.30), transparent 45%),
-                linear-gradient(135deg, var(--bg1), var(--bg2));
-    user-select: none; -webkit-user-select: none; touch-action: none;
+    color: var(--text); background: var(--bg1);
+    user-select: none; -webkit-user-select: none; touch-action: none; -webkit-tap-highlight-color: transparent;
   }
-  #arena { position: fixed; inset: 0; cursor: crosshair; }
+  body.playing { cursor: none; }
+  canvas#fx { position: fixed; inset: 0; z-index: 0; }
+  #stage { position: fixed; inset: 0; z-index: 1; }
+  #stage.shake { animation: shake .32s; }
+  @keyframes shake {
+    20% { transform: translate(-9px, 4px) rotate(-.4deg); } 40% { transform: translate(8px, -5px) rotate(.4deg); }
+    60% { transform: translate(-6px, -3px); } 80% { transform: translate(5px, 3px); }
+  }
+  #flash { position: fixed; inset: 0; z-index: 2; pointer-events: none; opacity: 0; }
+  #flash.red { animation: fl .35s; background: radial-gradient(circle, transparent 40%, rgba(255,60,90,.45)); }
+  #flash.gold { animation: fl .45s; background: radial-gradient(circle, transparent 35%, rgba(247,183,49,.45)); }
+  @keyframes fl { from { opacity: 1; } to { opacity: 0; } }
+
+  /* HUD */
   .hud {
-    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
-    display: flex; gap: 10px; z-index: 5; flex-wrap: wrap; justify-content: center;
-    max-width: calc(100% - 24px);
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%); z-index: 6;
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; max-width: calc(100% - 20px);
   }
   .pill {
-    background: rgba(13,17,23,.65); border: 1px solid rgba(255,255,255,.12);
-    padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 15px;
-    backdrop-filter: blur(6px); white-space: nowrap;
+    background: rgba(10,12,30,.6); border: 1px solid rgba(255,255,255,.14);
+    padding: 7px 13px; border-radius: 999px; font-weight: 800; font-size: 14px;
+    backdrop-filter: blur(8px); white-space: nowrap; box-shadow: 0 4px 18px rgba(0,0,0,.25);
   }
   .pill b { color: var(--cyan); }
+  .pill.combo b { color: var(--gold); }
+  .pill.bump { animation: bump .3s; }
+  @keyframes bump { 50% { transform: scale(1.18); } }
+  #timebar { position: fixed; top: 0; left: 0; height: 4px; z-index: 7; width: 100%;
+    background: linear-gradient(90deg, var(--lime), var(--cyan), var(--purple)); transform-origin: left; }
+  #timebar.low { background: linear-gradient(90deg, var(--coral), var(--pink)); animation: blink .5s infinite; }
+  @keyframes blink { 50% { opacity: .4; } }
+  #mute {
+    position: fixed; right: 12px; bottom: 12px; z-index: 12; font-size: 20px; width: 44px; height: 44px;
+    border-radius: 50%; border: 1px solid rgba(255,255,255,.18); background: rgba(10,12,30,.6);
+    color: #fff; cursor: pointer; backdrop-filter: blur(8px);
+  }
+
+  /* the mouse */
   #mouse {
-    position: absolute; left: 0; top: 0; width: 64px; height: 64px;
-    display: grid; place-items: center; font-size: 46px; line-height: 1;
-    transform: translate(-50%, -50%); transition: transform .08s;
-    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45)); cursor: pointer; z-index: 3;
+    position: absolute; left: 0; top: 0; width: 76px; height: 76px; z-index: 4;
+    display: grid; place-items: center; transform: translate(-50%, -50%); cursor: none;
   }
-  #mouse.flip span { display: inline-block; transform: scaleX(-1); }
-  #mouse.hit { animation: hit .35s ease-out; }
-  @keyframes hit { 50% { transform: translate(-50%, -50%) scale(1.5) rotate(20deg); } }
-  .pop {
-    position: absolute; pointer-events: none; font-weight: 800; font-size: 22px; color: var(--gold);
-    transform: translate(-50%, -50%); animation: pop .8s ease-out forwards; z-index: 4;
+  #mouse .ring {
+    position: absolute; inset: 6px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(36,198,220,.35), transparent 70%);
+    animation: pulse 1.1s ease-in-out infinite;
   }
-  @keyframes pop { to { opacity: 0; transform: translate(-50%, -140%) scale(1.3); } }
-  .cheese { position: absolute; font-size: 26px; opacity: .25; pointer-events: none; }
-  .panel {
-    position: fixed; inset: 0; display: grid; place-items: center; z-index: 10;
-    background: rgba(8,10,25,.55); backdrop-filter: blur(4px); padding: 16px;
+  #mouse.golden .ring { background: radial-gradient(circle, rgba(247,183,49,.75), transparent 70%); }
+  @keyframes pulse { 50% { transform: scale(1.25); opacity: .55; } }
+  #mouse .body { font-size: 50px; line-height: 1; position: relative; filter: drop-shadow(0 8px 12px rgba(0,0,0,.5)); }
+  #mouse.flip .body { transform: scaleX(-1); }
+  #mouse.golden .body::after { content: "👑"; position: absolute; font-size: 22px; left: 14px; top: -16px; }
+  #bubble {
+    position: absolute; z-index: 5; pointer-events: none; transform: translate(-50%, -100%);
+    background: #fff; color: #1a1340; font-weight: 800; font-size: 14px; padding: 7px 11px;
+    border-radius: 14px; white-space: nowrap; opacity: 0; transition: opacity .2s;
+    box-shadow: 0 6px 20px rgba(0,0,0,.35);
   }
+  #bubble::after { content: ""; position: absolute; left: 50%; bottom: -7px; transform: translateX(-50%);
+    border: 7px solid transparent; border-top-color: #fff; border-bottom: 0; }
+  #bubble.show { opacity: 1; }
+
+  /* custom cursor (desktop) */
+  #cursor {
+    position: fixed; z-index: 9; width: 40px; height: 40px; margin: -20px 0 0 -20px; pointer-events: none;
+    border: 2px solid var(--cyan); border-radius: 50%; box-shadow: 0 0 18px var(--cyan), inset 0 0 12px rgba(36,198,220,.5);
+    display: none; transition: transform .08s, border-color .2s;
+  }
+  #cursor::after { content: ""; position: absolute; left: 50%; top: 50%; width: 6px; height: 6px; margin: -3px;
+    background: #fff; border-radius: 50%; }
+  body.playing.has-mouse #cursor { display: block; }
+  #cursor.click { transform: scale(.7); }
+  #cursor.near { border-color: var(--pink); box-shadow: 0 0 22px var(--pink); }
+
+  /* floating texts */
+  .pop { position: absolute; z-index: 8; pointer-events: none; font-weight: 900; transform: translate(-50%, -50%);
+    animation: pop .9s ease-out forwards; text-shadow: 0 3px 12px rgba(0,0,0,.5); white-space: nowrap; }
+  @keyframes pop { 0% { transform: translate(-50%, -50%) scale(.6); } 20% { transform: translate(-50%, -60%) scale(1.25); }
+    100% { opacity: 0; transform: translate(-50%, -170%) scale(1); } }
+  .roast {
+    position: fixed; z-index: 11; left: 50%; bottom: 72px; transform: translateX(-50%);
+    max-width: min(92vw, 560px); text-align: center; pointer-events: none;
+    background: linear-gradient(90deg, rgba(255,79,216,.92), rgba(255,107,107,.92));
+    color: #fff; font-weight: 900; font-size: clamp(16px, 4.2vw, 21px); padding: 12px 18px; border-radius: 16px;
+    box-shadow: 0 10px 34px rgba(255,79,216,.45); animation: roastIn 2.1s ease-out forwards;
+  }
+  @keyframes roastIn {
+    0% { opacity: 0; transform: translate(-50%, 30px) scale(.8) rotate(-2deg); }
+    12% { opacity: 1; transform: translate(-50%, 0) scale(1.06) rotate(1deg); }
+    20% { transform: translate(-50%, 0) scale(1) rotate(0); }
+    82% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -12px); }
+  }
+  .ripple { position: absolute; z-index: 3; pointer-events: none; width: 16px; height: 16px; margin: -8px;
+    border-radius: 50%; border: 3px solid var(--coral); animation: rip .5s ease-out forwards; }
+  @keyframes rip { to { transform: scale(5); opacity: 0; } }
+
+  /* panels */
+  .panel { position: fixed; inset: 0; display: grid; place-items: center; z-index: 20; padding: 16px;
+    background: rgba(5,4,20,.55); backdrop-filter: blur(6px); }
   .card {
-    width: min(420px, 100%); text-align: center; padding: 28px 22px;
-    background: rgba(22,27,51,.92); border: 1px solid rgba(36,198,220,.35);
-    border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.45);
+    width: min(460px, 100%); text-align: center; padding: 26px 22px 22px; position: relative;
+    background: linear-gradient(160deg, rgba(34,26,84,.95), rgba(14,16,40,.95));
+    border-radius: 24px; box-shadow: 0 30px 80px rgba(0,0,0,.55);
+    animation: cardIn .45s cubic-bezier(.2,1.4,.4,1);
   }
-  .card h1 { margin: 6px 0 4px; font-size: 28px; }
-  .card p { color: var(--muted); margin: 8px 0 18px; line-height: 1.45; }
-  .big { font-size: 56px; }
-  button {
-    font: inherit; font-weight: 800; font-size: 17px; color: #fff; cursor: pointer;
-    border: 0; border-radius: 12px; padding: 13px 26px;
-    background: linear-gradient(90deg, var(--purple), var(--cyan));
-    box-shadow: 0 8px 22px rgba(36,198,220,.35);
+  .card::before { content: ""; position: absolute; inset: -2px; z-index: -1; border-radius: 26px;
+    background: conic-gradient(from var(--a, 0deg), var(--purple), var(--cyan), var(--pink), var(--gold), var(--purple));
+    animation: spin 4s linear infinite; }
+  @property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+  @keyframes spin { to { --a: 360deg; } }
+  @keyframes cardIn { from { transform: scale(.85) translateY(20px); opacity: 0; } }
+  .card h1 { margin: 6px 0 4px; font-size: clamp(26px, 7vw, 34px);
+    background: linear-gradient(90deg, #fff, var(--cyan), var(--pink)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .card p { color: var(--muted); margin: 8px 0 16px; line-height: 1.5; }
+  .big { font-size: 64px; animation: bob 1.6s ease-in-out infinite; display: inline-block; }
+  @keyframes bob { 50% { transform: translateY(-8px) rotate(-6deg); } }
+  .rules { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 4px 0 18px; text-align: left; font-size: 13px; }
+  .rules div { background: rgba(255,255,255,.06); border-radius: 12px; padding: 8px 10px; }
+  button.cta {
+    font: inherit; font-weight: 900; font-size: 18px; color: #fff; cursor: pointer; border: 0;
+    border-radius: 14px; padding: 14px 30px; letter-spacing: .3px;
+    background: linear-gradient(90deg, var(--purple), var(--cyan)); box-shadow: 0 10px 28px rgba(36,198,220,.4);
+    animation: glow 1.8s ease-in-out infinite;
   }
-  button:active { transform: scale(.97); }
+  @keyframes glow { 50% { box-shadow: 0 10px 40px rgba(255,79,216,.55); transform: translateY(-1px); } }
+  button.cta:active { transform: scale(.96); }
+  button.ghost { font: inherit; font-weight: 800; font-size: 15px; color: var(--text); cursor: pointer;
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.18); border-radius: 12px; padding: 12px 18px; }
+  .row { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 12px 0 14px; }
+  .stats div { background: rgba(255,255,255,.06); border-radius: 12px; padding: 10px 6px; }
+  .stats b { display: block; font-size: 24px; color: var(--cyan); }
+  .stats span { font-size: 12px; color: var(--muted); }
+  .verdict { background: linear-gradient(90deg, rgba(255,79,216,.18), rgba(255,107,107,.18));
+    border: 1px solid rgba(255,79,216,.4); border-radius: 14px; padding: 12px 14px; margin: 0 0 16px;
+    font-weight: 800; line-height: 1.45; }
   a { color: var(--cyan); }
-  .small { font-size: 13px; color: var(--muted); margin-top: 16px; }
-  .hidden { display: none; }
+  .small { font-size: 13px; color: var(--muted); margin-top: 14px; }
+  #count { position: fixed; inset: 0; z-index: 21; display: grid; place-items: center; pointer-events: none;
+    font-size: clamp(90px, 28vw, 180px); font-weight: 900; color: #fff; text-shadow: 0 0 40px var(--cyan); }
+  #count span { animation: cnt .8s ease-out forwards; }
+  @keyframes cnt { from { transform: scale(2.2); opacity: 0; } 30% { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(.7); } }
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
-<div id="arena"></div>
+<canvas id="fx"></canvas>
+<div id="flash"></div>
+<div id="timebar"></div>
 
 <div class="hud">
-  <div class="pill">🧀 Caught: <b id="score">0</b></div>
+  <div class="pill" id="pScore">🧀 <b id="score">0</b></div>
   <div class="pill">⏱️ <b id="time">30</b>s</div>
-  <div class="pill">🏆 Best: <b id="best">0</b></div>
+  <div class="pill combo" id="pCombo">🔥 x<b id="combo">1</b></div>
+  <div class="pill">🏆 <b id="best">0</b></div>
 </div>
 
-<div id="mouse" class="hidden" aria-label="mouse"><span>🐭</span></div>
+<div id="stage">
+  <div id="mouse" class="hidden" aria-label="mouse"><div class="ring"></div><div class="body">🐭</div></div>
+  <div id="bubble"></div>
+</div>
+<div id="cursor"></div>
+<div id="count"></div>
+<button id="mute" title="Sound on/off">🔊</button>
 
 <div id="start" class="panel">
   <div class="card">
     <div class="big">🐭</div>
     <h1>Catch Me If You Can</h1>
-    <p>The mouse runs away from your cursor.<br>Click or tap it as many times as you can in <b>30 seconds</b>. It gets faster every catch!</p>
-    <button id="play">▶ Play</button>
+    <p>This mouse is fast, petty and talks trash.<br>Catch it as many times as you can in <b>30 seconds</b>.</p>
+    <div class="rules">
+      <div>🎯 Click / tap the mouse</div>
+      <div>🔥 Quick catches = combo</div>
+      <div>👑 Golden mouse = +5</div>
+      <div>💀 Miss = you get roasted</div>
+    </div>
+    <button class="cta" id="play">▶ LET'S GO</button>
     <div class="small">A tiny game from <a href="https://github.com/yahyeameer" target="_top">Yahye's GitHub profile</a></div>
   </div>
 </div>
@@ -97,153 +204,352 @@
   <div class="card">
     <div class="big" id="overEmoji">🏆</div>
     <h1 id="overTitle">Time's up!</h1>
-    <p id="overText"></p>
-    <button id="again">🔄 Play again</button>
+    <div class="stats">
+      <div><b id="sScore">0</b><span>points</span></div>
+      <div><b id="sCaught">0</b><span>catches</span></div>
+      <div><b id="sAcc">0%</b><span>accuracy</span></div>
+    </div>
+    <div class="verdict" id="verdict"></div>
+    <div class="row">
+      <button class="cta" id="again">🔄 Run it back</button>
+      <button class="ghost" id="share">📋 Copy score</button>
+    </div>
     <div class="small"><a href="https://github.com/yahyeameer" target="_top">⬅ Back to the profile</a></div>
   </div>
 </div>
 
 <script>
 (() => {
-  const ROUND = 30;
-  const arena = document.getElementById("arena");
-  const mouse = document.getElementById("mouse");
-  const scoreEl = document.getElementById("score");
-  const timeEl = document.getElementById("time");
-  const bestEl = document.getElementById("best");
-  const startPanel = document.getElementById("start");
-  const overPanel = document.getElementById("over");
+  const ROUND = 30, COMBO_WINDOW = 1400;
+  const $ = (id) => document.getElementById(id);
+  const stage = $("stage"), mouse = $("mouse"), bubble = $("bubble"), cursor = $("cursor");
+  const canvas = $("fx"), ctx = canvas.getContext("2d");
 
-  let best = 0;
-  try { best = parseInt(localStorage.getItem("catch-best") || "0", 10) || 0; } catch (e) {}
-  bestEl.textContent = best;
+  // ---------- roasts (American slang, all in good fun) ----------
+  const MISS_ROASTS = [
+    "Bro really said \"I'm fast\" 💀", "You swung and missed like it's tee-ball 😭",
+    "That mouse is lowkey cooking you rn 🍳", "Nah, you're not him 😂", "Skill issue, fr fr",
+    "My grandma clicks faster and she's on a flip phone 📱", "Bro's aim is on airplane mode ✈️",
+    "Ain't no way you missed that 💀", "The mouse just ratio'd you 🐭", "You're moving like dial-up internet 🐌",
+    "That click was mid at best", "Bless your heart, you tried 🙏", "Caught in 4K missing again 📸",
+    "Not even close, chief", "Your cursor needs a GPS 🗺️", "It's right there, bestie 😭",
+    "You fumbled the bag 🧀", "It's giving… slow", "Bro is clicking on vibes alone",
+    "Somebody check on this guy 🚑", "That's a whole L, my guy", "Touch grass, then come back 🌱",
+    "Even the cheese is laughing at you 🧀😂", "Respectfully… what was that?", "You built different (worse) 💀",
+    "Bro's reflexes are buffering ⏳", "Shooting bricks all day 🧱", "Was that a click or a cry for help?"
+  ];
+  const TAUNTS = [
+    "Too slow, bruh! 😎", "Catch me? In your dreams 💤", "Cheese is mine, pal 🧀", "Lmaooo try again",
+    "Is that all you got?", "You can't see me 🫥", "Bet you can't 😏", "I'm built different 💅",
+    "Zoom zoom 🏎️", "Stay pressed 😂", "Not today, chief", "Cardio check ✅"
+  ];
+  const CATCH_LINES = ["Got 'em! 😤", "Sheesh!", "Clean!", "Let's gooo!", "Cookin' 🔥", "No cap!", "Bussin'!", "W 💪"];
 
-  // decorative cheese
-  for (let i = 0; i < 10; i++) {
-    const c = document.createElement("div");
-    c.className = "cheese"; c.textContent = "🧀";
-    c.style.left = Math.random() * 95 + "vw"; c.style.top = (10 + Math.random() * 85) + "vh";
-    arena.appendChild(c);
+  function endVerdict(score, caught, acc) {
+    let r;
+    if (caught === 0) r = ["💀", "Zero catches. ZERO.", "The mouse is filing a restraining order… out of pity. Go hydrate and come back, champ."];
+    else if (score < 5) r = ["😭", "Rough. Real rough.", "Even the mouse feels bad for you rn. That was a whole L."];
+    else if (score < 10) r = ["🥱", "Mid. Straight-up mid.", "Not bad, not good, just… there. Like gas station sushi."];
+    else if (score < 18) r = ["😏", "Okay, okay — you're kinda him.", "Kinda. Don't let it go to your head, though."];
+    else if (score < 28) r = ["⚡", "Sheesh! Lightning hands.", "No cap, you were cooking. The mouse is low-key shook."];
+    else r = ["🐐", "You're HIM. GOATed.", "The mouse is calling its lawyer. Absolute menace behavior, respect."];
+    let extra = "";
+    if (caught > 0 && acc < 40) extra = " Also, " + acc + "% accuracy? You were clicking on pure vibes 😂";
+    else if (acc >= 85 && caught >= 5) extra = " And " + acc + "% accuracy?? Sniper energy 🎯";
+    return [r[0], r[1], r[2] + extra];
   }
 
-  const state = { x: 0, y: 0, vx: 0, vy: 0, px: -999, py: -999, score: 0, left: ROUND, running: false, last: 0, endAt: 0 };
+  // ---------- sound (Web Audio, no files) ----------
+  let audio = null, muted = false;
+  try { muted = localStorage.getItem("catch-muted") === "1"; } catch (e) {}
+  $("mute").textContent = muted ? "🔇" : "🔊";
+  function beep(freq, dur, type, vol, slide) {
+    if (muted) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime;
+      o.type = type || "sine"; o.frequency.setValueAtTime(freq, t);
+      if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + dur);
+      g.gain.setValueAtTime(vol || .12, t); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+      o.connect(g); g.connect(audio.destination); o.start(t); o.stop(t + dur);
+    } catch (e) {}
+  }
+  const sfx = {
+    catch: (c) => { beep(520 + c * 60, .12, "triangle", .14, 980 + c * 80); },
+    gold: () => { [660, 880, 1320].forEach((f, i) => setTimeout(() => beep(f, .14, "square", .07), i * 70)); },
+    miss: () => beep(180, .22, "sawtooth", .06, 90),
+    tick: () => beep(1200, .05, "square", .03),
+    go: () => beep(440, .25, "triangle", .12, 880),
+    end: () => [523, 392, 330, 262].forEach((f, i) => setTimeout(() => beep(f, .2, "triangle", .1), i * 120))
+  };
+  $("mute").addEventListener("click", (e) => {
+    e.stopPropagation(); muted = !muted; $("mute").textContent = muted ? "🔇" : "🔊";
+    try { localStorage.setItem("catch-muted", muted ? "1" : "0"); } catch (err) {}
+  });
 
-  function size() { return { w: window.innerWidth, h: window.innerHeight }; }
+  // ---------- background + particles canvas ----------
+  let W = 0, H = 0, DPR = Math.min(2, window.devicePixelRatio || 1);
+  const stars = [], parts = [], trail = [];
+  function resize() {
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width = W * DPR; canvas.height = H * DPR; canvas.style.width = W + "px"; canvas.style.height = H + "px";
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    stars.length = 0;
+    const n = Math.round((W * H) / 9000);
+    for (let i = 0; i < n; i++) stars.push({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 1.6 + .3, s: Math.random() * .3 + .05, p: Math.random() * 6 });
+  }
+  window.addEventListener("resize", resize); resize();
+
+  function burst(x, y, colors, n, power) {
+    for (let i = 0; i < n; i++) {
+      const a = Math.random() * Math.PI * 2, v = (Math.random() * .8 + .4) * power;
+      parts.push({ x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - power * .3, life: 1,
+        c: colors[i % colors.length], r: Math.random() * 3 + 2, g: 900, sq: Math.random() < .4 });
+    }
+  }
+  function confetti() {
+    for (let i = 0; i < 140; i++) parts.push({ x: Math.random() * W, y: -20 - Math.random() * H * .5,
+      vx: (Math.random() - .5) * 120, vy: Math.random() * 120 + 60, life: 2.4,
+      c: ["#24c6dc", "#ff4fd8", "#f7b731", "#7CFFB2", "#8a2be2"][i % 5], r: Math.random() * 4 + 3, g: 60, sq: true });
+  }
+
+  let t0 = performance.now();
+  function draw(now) {
+    const dt = Math.min(.05, (now - t0) / 1000); t0 = now;
+    const g = ctx.createLinearGradient(0, 0, W, H);
+    g.addColorStop(0, "#07051a"); g.addColorStop(.55, "#1d1650"); g.addColorStop(1, "#0b3a4f");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    // glowing orbs
+    const orb = (x, y, r, c) => { const rg = ctx.createRadialGradient(x, y, 0, x, y, r); rg.addColorStop(0, c); rg.addColorStop(1, "transparent"); ctx.fillStyle = rg; ctx.fillRect(x - r, y - r, r * 2, r * 2); };
+    const k = now / 4000;
+    orb(W * (.2 + .08 * Math.sin(k)), H * (.25 + .06 * Math.cos(k * 1.3)), Math.max(W, H) * .45, "rgba(138,43,226,.28)");
+    orb(W * (.85 + .06 * Math.cos(k)), H * (.8 + .05 * Math.sin(k * .9)), Math.max(W, H) * .45, "rgba(36,198,220,.22)");
+    // perspective grid
+    ctx.strokeStyle = "rgba(36,198,220,.08)"; ctx.lineWidth = 1;
+    const hz = H * .62, off = (now / 40) % 40;
+    for (let i = 0; i < 18; i++) { const y = hz + Math.pow(i / 18, 2) * (H - hz) + off * (i / 18); ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke(); }
+    for (let i = -12; i <= 12; i++) { ctx.beginPath(); ctx.moveTo(W / 2 + i * 30, hz); ctx.lineTo(W / 2 + i * 160, H); ctx.stroke(); }
+    // stars
+    for (const s of stars) {
+      s.y -= s.s * 20 * dt; if (s.y < 0) { s.y = H; s.x = Math.random() * W; }
+      ctx.globalAlpha = .35 + .65 * Math.abs(Math.sin(now / 900 + s.p));
+      ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, 7); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    // mouse trail
+    for (let i = 0; i < trail.length; i++) {
+      const p = trail[i], a = i / trail.length;
+      ctx.fillStyle = state.golden ? `rgba(247,183,49,${a * .45})` : `rgba(36,198,220,${a * .35})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 4 + a * 14, 0, 7); ctx.fill();
+    }
+    // particles
+    for (let i = parts.length - 1; i >= 0; i--) {
+      const p = parts[i];
+      p.vy += p.g * dt; p.x += p.vx * dt; p.y += p.vy * dt; p.life -= dt * (p.g > 100 ? 1.3 : .45);
+      if (p.life <= 0 || p.y > H + 30) { parts.splice(i, 1); continue; }
+      ctx.globalAlpha = Math.min(1, p.life); ctx.fillStyle = p.c;
+      if (p.sq) { ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.life * 6); ctx.fillRect(-p.r, -p.r / 2, p.r * 2, p.r); ctx.restore(); }
+      else { ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, 7); ctx.fill(); }
+    }
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(draw);
+  }
+  requestAnimationFrame(draw);
+
+  // ---------- game state ----------
+  let best = 0;
+  try { best = parseInt(localStorage.getItem("catch-best") || "0", 10) || 0; } catch (e) {}
+  $("best").textContent = best;
+
+  const state = { x: 0, y: 0, vx: 0, vy: 0, px: -999, py: -999, score: 0, caught: 0, clicks: 0,
+    combo: 1, lastCatch: 0, running: false, last: 0, endAt: 0, golden: false, goldenUntil: 0,
+    lastRoast: 0, lastTaunt: 0, lastTick: 0, roastIdx: [], tauntIdx: [] };
+
+  function pick(list, key) {
+    if (!state[key].length) state[key] = list.map((_, i) => i).sort(() => Math.random() - .5);
+    return list[state[key].pop()];
+  }
 
   function place() {
-    const { w, h } = size();
-    state.x = 60 + Math.random() * (w - 120);
-    state.y = 90 + Math.random() * (h - 150);
-    state.vx = 0; state.vy = 0;
+    state.x = 60 + Math.random() * (W - 120);
+    state.y = 100 + Math.random() * (H - 170);
+    state.vx = 0; state.vy = 0; trail.length = 0;
+    state.golden = state.caught > 2 && Math.random() < .14;
+    state.goldenUntil = performance.now() + 2600;
+    mouse.classList.toggle("golden", state.golden);
   }
 
   function pointer(e) {
     const p = e.touches ? e.touches[0] : e;
     if (!p) return;
     state.px = p.clientX; state.py = p.clientY;
+    cursor.style.left = p.clientX + "px"; cursor.style.top = p.clientY + "px";
   }
-  window.addEventListener("pointermove", pointer, { passive: true });
+  window.addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") document.body.classList.add("has-mouse"); pointer(e); }, { passive: true });
   window.addEventListener("touchmove", pointer, { passive: true });
-  window.addEventListener("pointerdown", pointer, { passive: true });
 
-  function speedFactor() { return 1 + state.score * 0.12; }
+  function showBubble(text) {
+    bubble.textContent = text; bubble.classList.add("show");
+    clearTimeout(showBubble.t); showBubble.t = setTimeout(() => bubble.classList.remove("show"), 1100);
+  }
 
-  function tick(t) {
+  function popText(x, y, text, color, size) {
+    const p = document.createElement("div");
+    p.className = "pop"; p.textContent = text; p.style.color = color || "#f7b731"; p.style.fontSize = (size || 24) + "px";
+    p.style.left = x + "px"; p.style.top = y + "px"; stage.appendChild(p);
+    setTimeout(() => p.remove(), 900);
+  }
+
+  function roast() {
+    const now = performance.now();
+    if (now - state.lastRoast < 1300) return;
+    state.lastRoast = now;
+    const r = document.createElement("div");
+    r.className = "roast"; r.textContent = pick(MISS_ROASTS, "roastIdx");
+    document.body.appendChild(r); setTimeout(() => r.remove(), 2100);
+  }
+
+  function flash(kind) { const f = $("flash"); f.className = ""; void f.offsetWidth; f.className = kind; }
+  function bump(id) { const el = $(id); el.classList.remove("bump"); void el.offsetWidth; el.classList.add("bump"); }
+
+  function tick(now) {
     if (!state.running) return;
-    const dt = Math.min(0.05, (t - state.last) / 1000 || 0);
-    state.last = t;
-    const { w, h } = size();
+    const dt = Math.min(.05, (now - state.last) / 1000 || 0);
+    state.last = now;
+    const speed = 1 + state.caught * .1;
 
-    // flee from the pointer when it gets close
-    const dx = state.x - state.px, dy = state.y - state.py;
-    const dist = Math.hypot(dx, dy) || 1;
-    const fear = 190 + state.score * 6;
+    if (state.golden && now > state.goldenUntil) { state.golden = false; mouse.classList.remove("golden"); }
+
+    const dx = state.x - state.px, dy = state.y - state.py, dist = Math.hypot(dx, dy) || 1;
+    const fear = 200 + state.caught * 6;
+    cursor.classList.toggle("near", dist < 90);
     if (dist < fear) {
-      const push = (1 - dist / fear) * 2600 * speedFactor();
-      state.vx += (dx / dist) * push * dt;
-      state.vy += (dy / dist) * push * dt;
+      const push = (1 - dist / fear) * 2700 * speed * (state.golden ? 1.35 : 1);
+      state.vx += (dx / dist) * push * dt; state.vy += (dy / dist) * push * dt;
+      if (dist < 140 && now - state.lastTaunt > 2600 && Math.random() < .03) { state.lastTaunt = now; showBubble(pick(TAUNTS, "tauntIdx")); }
     } else {
-      // wander a little so it never sits still
-      state.vx += (Math.random() - .5) * 400 * dt;
-      state.vy += (Math.random() - .5) * 400 * dt;
+      state.vx += (Math.random() - .5) * 500 * dt; state.vy += (Math.random() - .5) * 500 * dt;
     }
-
-    // speed cap and friction
-    const max = 520 * speedFactor();
-    const sp = Math.hypot(state.vx, state.vy);
+    const max = 540 * speed, sp = Math.hypot(state.vx, state.vy);
     if (sp > max) { state.vx *= max / sp; state.vy *= max / sp; }
-    state.vx *= 0.92; state.vy *= 0.92;
-
+    state.vx *= .92; state.vy *= .92;
     state.x += state.vx * dt; state.y += state.vy * dt;
 
-    // bounce off walls; if cornered, slip along the edge
-    const m = 32, top = 70;
-    if (state.x < m) { state.x = m; state.vx = Math.abs(state.vx) + 60; }
-    if (state.x > w - m) { state.x = w - m; state.vx = -Math.abs(state.vx) - 60; }
-    if (state.y < top) { state.y = top; state.vy = Math.abs(state.vy) + 60; }
-    if (state.y > h - m) { state.y = h - m; state.vy = -Math.abs(state.vy) - 60; }
+    const m = 36, top = 80;
+    if (state.x < m) { state.x = m; state.vx = Math.abs(state.vx) + 70; }
+    if (state.x > W - m) { state.x = W - m; state.vx = -Math.abs(state.vx) - 70; }
+    if (state.y < top) { state.y = top; state.vy = Math.abs(state.vy) + 70; }
+    if (state.y > H - m) { state.y = H - m; state.vy = -Math.abs(state.vy) - 70; }
 
-    mouse.style.left = state.x + "px";
-    mouse.style.top = state.y + "px";
+    trail.push({ x: state.x, y: state.y }); if (trail.length > 14) trail.shift();
+    mouse.style.left = state.x + "px"; mouse.style.top = state.y + "px";
     mouse.classList.toggle("flip", state.vx > 0);
+    bubble.style.left = state.x + "px"; bubble.style.top = (state.y - 40) + "px";
 
-    const remaining = Math.max(0, Math.ceil((state.endAt - performance.now()) / 1000));
-    if (remaining !== state.left) { state.left = remaining; timeEl.textContent = remaining; }
-    if (remaining <= 0) return end();
+    if (state.combo > 1 && now - state.lastCatch > COMBO_WINDOW) { state.combo = 1; $("combo").textContent = 1; }
+
+    const leftMs = state.endAt - now, left = Math.max(0, Math.ceil(leftMs / 1000));
+    $("time").textContent = left;
+    $("timebar").style.transform = `scaleX(${Math.max(0, leftMs / (ROUND * 1000))})`;
+    $("timebar").classList.toggle("low", left <= 5);
+    if (left <= 5 && left > 0 && now - state.lastTick > 1000) { state.lastTick = now; sfx.tick(); }
+    if (leftMs <= 0) return end();
     requestAnimationFrame(tick);
   }
 
-  function popText(x, y, text) {
-    const p = document.createElement("div");
-    p.className = "pop"; p.textContent = text;
-    p.style.left = x + "px"; p.style.top = y + "px";
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 800);
-  }
-
-  function caught(e) {
+  function onCatch(e) {
     if (!state.running) return;
     e.preventDefault(); e.stopPropagation();
-    state.score++;
-    scoreEl.textContent = state.score;
-    popText(state.x, state.y, ["+1 🧀", "Got it!", "Nice!", "+1", "Quick!"][state.score % 5]);
-    mouse.classList.remove("hit"); void mouse.offsetWidth; mouse.classList.add("hit");
-    if (navigator.vibrate) { try { navigator.vibrate(30); } catch (err) {} }
+    pointer(e);
+    const now = performance.now();
+    state.clicks++; state.caught++;
+    state.combo = now - state.lastCatch < COMBO_WINDOW ? Math.min(5, state.combo + 1) : 1;
+    state.lastCatch = now;
+    const gold = state.golden;
+    const pts = (gold ? 5 : 1) * state.combo;
+    state.score += pts;
+    $("score").textContent = state.score; $("combo").textContent = state.combo; bump("pScore");
+    if (state.combo > 1) bump("pCombo");
+    popText(state.x, state.y - 10, gold ? `👑 +${pts}` : `+${pts}`, gold ? "#f7b731" : "#7CFFB2", gold ? 34 : 26);
+    if (state.combo >= 3) popText(state.x, state.y - 50, `COMBO x${state.combo} 🔥`, "#ff4fd8", 22);
+    else popText(state.x, state.y - 48, CATCH_LINES[state.caught % CATCH_LINES.length], "#fff", 17);
+    burst(state.x, state.y, gold ? ["#f7b731", "#fff3b0", "#ffd166"] : ["#24c6dc", "#7CFFB2", "#ff4fd8", "#fff"], gold ? 46 : 26, gold ? 520 : 380);
+    if (gold) { flash("gold"); sfx.gold(); } else sfx.catch(state.combo);
+    if (navigator.vibrate) { try { navigator.vibrate(gold ? [30, 40, 30] : 25); } catch (err) {} }
     place();
   }
-  mouse.addEventListener("pointerdown", caught);
+  mouse.addEventListener("pointerdown", onCatch);
+
+  function onMiss(e) {
+    if (!state.running || e.target.closest("#mute")) return;
+    pointer(e);
+    state.clicks++;
+    state.combo = 1; $("combo").textContent = 1;
+    const rp = document.createElement("div"); rp.className = "ripple";
+    rp.style.left = state.px + "px"; rp.style.top = state.py + "px"; stage.appendChild(rp); setTimeout(() => rp.remove(), 500);
+    popText(state.px, state.py - 20, ["MISS", "💀", "L", "nope"][state.clicks % 4], "#ff6b6b", 22);
+    stage.classList.remove("shake"); void stage.offsetWidth; stage.classList.add("shake");
+    flash("red"); sfx.miss(); roast();
+    if (Math.random() < .5) showBubble(pick(TAUNTS, "tauntIdx"));
+  }
+  window.addEventListener("pointerdown", (e) => {
+    cursor.classList.add("click"); setTimeout(() => cursor.classList.remove("click"), 120);
+    if (e.target === mouse || mouse.contains(e.target)) return;
+    onMiss(e);
+  });
+
+  function countdown(done) {
+    const c = $("count"); let n = 3;
+    const step = () => {
+      if (n === 0) { c.innerHTML = "<span>GO!</span>"; sfx.go(); setTimeout(() => { c.innerHTML = ""; done(); }, 450); return; }
+      c.innerHTML = `<span>${n}</span>`; beep(600, .1, "triangle", .08); n--; setTimeout(step, 650);
+    };
+    step();
+  }
 
   function start() {
-    state.score = 0; scoreEl.textContent = "0";
-    state.left = ROUND; timeEl.textContent = ROUND;
-    startPanel.classList.add("hidden"); overPanel.classList.add("hidden");
-    mouse.classList.remove("hidden");
+    Object.assign(state, { score: 0, caught: 0, clicks: 0, combo: 1, lastCatch: 0, lastRoast: 0, lastTaunt: 0, golden: false });
+    $("score").textContent = 0; $("combo").textContent = 1; $("time").textContent = ROUND;
+    $("timebar").style.transform = "scaleX(1)"; $("timebar").classList.remove("low");
+    $("start").classList.add("hidden"); $("over").classList.add("hidden");
     place();
-    state.running = true;
-    state.endAt = performance.now() + ROUND * 1000;
-    state.last = performance.now();
-    requestAnimationFrame(tick);
+    countdown(() => {
+      mouse.classList.remove("hidden"); document.body.classList.add("playing");
+      state.running = true; state.endAt = performance.now() + ROUND * 1000; state.last = performance.now();
+      showBubble("Catch me if you can 😜");
+      requestAnimationFrame(tick);
+    });
   }
 
   function end() {
     state.running = false;
-    mouse.classList.add("hidden");
-    const s = state.score;
+    mouse.classList.add("hidden"); bubble.classList.remove("show"); document.body.classList.remove("playing");
+    $("timebar").style.transform = "scaleX(0)";
+    const acc = state.clicks ? Math.round((state.caught / state.clicks) * 100) : 0;
     let newBest = false;
-    if (s > best) {
-      best = s; newBest = true; bestEl.textContent = best;
+    if (state.score > best) {
+      best = state.score; newBest = true; $("best").textContent = best;
       try { localStorage.setItem("catch-best", String(best)); } catch (e) {}
     }
-    const rank = s >= 25 ? ["🐱", "Cat-level reflexes!"] : s >= 15 ? ["⚡", "Lightning hands!"] : s >= 8 ? ["👏", "Nice catching!"] : ["🐭", "The mouse wins this time!"];
-    document.getElementById("overEmoji").textContent = newBest && s > 0 ? "🏆" : rank[0];
-    document.getElementById("overTitle").textContent = newBest && s > 0 ? "New best score!" : rank[1];
-    document.getElementById("overText").innerHTML =
-      "You caught the mouse <b>" + s + "</b> time" + (s === 1 ? "" : "s") + ".<br>Your best: <b>" + best + "</b>";
-    overPanel.classList.remove("hidden");
+    const [emoji, title, text] = endVerdict(state.score, state.caught, acc);
+    $("overEmoji").textContent = newBest && state.score > 0 ? "🏆" : emoji;
+    $("overTitle").textContent = newBest && state.score > 0 ? "New personal best!" : title;
+    $("verdict").textContent = (newBest && state.score > 0 ? title + " " : "") + text;
+    $("sScore").textContent = state.score; $("sCaught").textContent = state.caught; $("sAcc").textContent = acc + "%";
+    $("over").classList.remove("hidden");
+    if (newBest && state.score > 0) confetti(); else sfx.end();
+    state.lastResult = `I scored ${state.score} in Catch Me If You Can 🐭 (${state.caught} catches, ${acc}% accuracy). Bet you can't beat it 😏 https://yahyeameer.github.io/yahyeameer/catch/`;
   }
 
-  document.getElementById("play").addEventListener("click", start);
-  document.getElementById("again").addEventListener("click", start);
+  $("play").addEventListener("click", (e) => { e.stopPropagation(); start(); });
+  $("again").addEventListener("click", (e) => { e.stopPropagation(); start(); });
+  $("share").addEventListener("click", async (e) => {
+    e.stopPropagation();
+    const btn = $("share");
+    try { await navigator.clipboard.writeText(state.lastResult); btn.textContent = "✅ Copied!"; }
+    catch (err) { btn.textContent = "❌ Couldn't copy"; }
+    setTimeout(() => { btn.textContent = "📋 Copy score"; }, 1600);
+  });
 })();
 </script>
 </body>
