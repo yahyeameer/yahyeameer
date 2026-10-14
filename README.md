@@ -18,7 +18,7 @@
   <img src="https://img.shields.io/badge/📍_Hargeisa,_Somaliland-302b63?style=flat-square" alt="Location"/>
   <img src="https://img.shields.io/badge/🕒_Remote_·_UTC+3-302b63?style=flat-square" alt="Timezone"/>
   <img src="https://img.shields.io/badge/✅_Open_to-Remote_·_Freelance_·_Full--time-2ea44f?style=flat-square" alt="Open to work"/>
-  <img src="https://komarev.com/ghpvc/?username=ahmedidrisi21&style=flat-square&color=24c6dc&label=Profile+views" alt="Profile views"/>
+  <img src="https://komarev.com/ghpvc/?username=yahyeameer&style=flat-square&color=24c6dc&label=Profile+views" alt="Profile views"/>
 </p>
 
 <!-- ═══════════════════════════ ABOUT ═══════════════════════════ -->
@@ -317,8 +317,8 @@ Teacher and student dashboards with attendance, scheduling and progress tracking
 
 <!-- TTT:START -->
 <p align="center"><b>Your turn!</b> You are ❌. Click any ⬜ square to play — I'm ⭕ and I reply automatically.</p>
-<table align="center"><tr><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C0"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C1"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C2"><h1>⬜</h1></a></td></tr><tr><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C3"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C4"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C5"><h1>⬜</h1></a></td></tr><tr><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C6"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C7"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C8"><h1>⬜</h1></a></td></tr></table>
-<p align="center"><a href="https://github.com/ahmedidrisi21/ahmedidrisi21/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cnew"><img src="https://img.shields.io/badge/🔄_New_game-24c6dc?style=for-the-badge" alt="New game"/></a></p>
+<table align="center"><tr><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C0"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C1"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C2"><h1>⬜</h1></a></td></tr><tr><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C3"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C4"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C5"><h1>⬜</h1></a></td></tr><tr><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C6"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C7"><h1>⬜</h1></a></td><td align="center" width="80" height="80"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cmove%7C8"><h1>⬜</h1></a></td></tr></table>
+<p align="center"><a href="https://github.com/yahyeameer/yahyeameer/issues/new?body=Just+press+%22Create%22+%E2%80%94+the+board+updates+in+about+a+minute.&title=ttt%7Cnew"><img src="https://img.shields.io/badge/🔄_New_game-24c6dc?style=for-the-badge" alt="New game"/></a></p>
 <p align="center"><sub>🏆 Humans won: <b>0</b> · 🤖 Bot won: <b>0</b> · 🤝 Draws: <b>0</b><br/>Recent players: nobody yet — be the first!</sub></p>
 <!-- TTT:END -->
 
@@ -352,9 +352,9 @@ Teacher and student dashboards with attendance, scheduling and progress tracking
 
 <p align="center">
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/ahmedidrisi21/ahmedidrisi21/output/github-snake-dark.svg"/>
-    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/ahmedidrisi21/ahmedidrisi21/output/github-snake.svg"/>
-    <img alt="Snake eating my GitHub contributions" src="https://raw.githubusercontent.com/ahmedidrisi21/ahmedidrisi21/output/github-snake-dark.svg"/>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/yahyeameer/yahyeameer/output/github-snake-dark.svg"/>
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/yahyeameer/yahyeameer/output/github-snake.svg"/>
+    <img alt="Snake eating my GitHub contributions" src="https://raw.githubusercontent.com/yahyeameer/yahyeameer/output/github-snake-dark.svg"/>
   </picture>
 </p>
 
@@ -362,17 +362,17 @@ Teacher and student dashboards with attendance, scheduling and progress tracking
 <img src="assets/section-stats.svg" width="100%" alt="GitHub Stats"/>
 
 <p align="center">
-  <img width="100%" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=ahmedidrisi21&theme=tokyonight" alt="Profile details and contributions"/>
+  <img width="100%" src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=yahyeameer&theme=tokyonight" alt="Profile details and contributions"/>
 </p>
 
 <p align="center">
-  <img width="32%" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=ahmedidrisi21&theme=tokyonight" alt="GitHub stats"/>
-  <img width="32%" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=ahmedidrisi21&theme=tokyonight" alt="Top languages by commit"/>
-  <img width="32%" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=ahmedidrisi21&theme=tokyonight" alt="Repos per language"/>
+  <img width="32%" src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=yahyeameer&theme=tokyonight" alt="GitHub stats"/>
+  <img width="32%" src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=yahyeameer&theme=tokyonight" alt="Top languages by commit"/>
+  <img width="32%" src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=yahyeameer&theme=tokyonight" alt="Repos per language"/>
 </p>
 
 <p align="center">
-  <img src="https://streak-stats.demolab.com/?user=ahmedidrisi21&theme=tokyonight&hide_border=true" alt="GitHub streak"/>
+  <img src="https://streak-stats.demolab.com/?user=yahyeameer&theme=tokyonight&hide_border=true" alt="GitHub streak"/>
 </p>
 
 <!-- ═══════════════════════════ FOOTER ═══════════════════════════ -->

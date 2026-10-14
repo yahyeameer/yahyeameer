@@ -10,7 +10,7 @@ import random
 import re
 import sys
 
-REPO = os.environ.get("GITHUB_REPOSITORY", "ahmedidrisi21/ahmedidrisi21")
+REPO = os.environ.get("GITHUB_REPOSITORY", "yahyeameer/yahyeameer")
 STATE = "game/ttt.json"
 README = "README.md"
 START, END = "<!-- TTT:START -->", "<!-- TTT:END -->"
