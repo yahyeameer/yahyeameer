@@ -1,16 +1,25 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="854" height="230" viewBox="0 0 854 230">
-<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="0">
-<stop offset="0" stop-color="#0f0c29"/><stop offset="0.5" stop-color="#302b63"/><stop offset="1" stop-color="#24c6dc"/></linearGradient></defs>
+<svg xmlns="http://www.w3.org/2000/svg" width="854" height="250" viewBox="0 0 854 250">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f0c29"/><stop offset="0.5" stop-color="#302b63"/><stop offset="1" stop-color="#24c6dc"/></linearGradient>
+<radialGradient id="o1"><stop offset="0" stop-color="#24c6dc" stop-opacity=".55"/><stop offset="1" stop-color="#24c6dc" stop-opacity="0"/></radialGradient>
+<radialGradient id="o2"><stop offset="0" stop-color="#b14aed" stop-opacity=".5"/><stop offset="1" stop-color="#b14aed" stop-opacity="0"/></radialGradient></defs>
 <style>
-.t{font:700 54px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#fff;opacity:0;animation:f 1.2s ease-out forwards}
-.s{font:600 18px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#d6f6fb;opacity:0;animation:f 1.2s ease-out .5s forwards}
-.w{animation:m 8s ease-in-out infinite alternate}
-@keyframes f{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
-@keyframes m{from{transform:translateX(0)}to{transform:translateX(-60px)}}
+.t{font:800 56px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#fff;opacity:0;animation:f 1.1s ease-out forwards}
+.sub{font:600 18px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#d6f6fb;opacity:0;animation:f 1.1s ease-out .45s forwards}
+.tag{font:600 14px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#9fe9f5;opacity:0;animation:f 1.1s ease-out .9s forwards}
+.s0{animation:tw 2.2s ease-in-out infinite}.s1{animation:tw 3.1s ease-in-out .7s infinite}.s2{animation:tw 2.7s ease-in-out 1.3s infinite}
+.a{animation:fl 7s ease-in-out infinite alternate}.b{animation:fl 9s ease-in-out 1s infinite alternate-reverse}
+.w1{animation:wv 9s ease-in-out infinite alternate}.w2{animation:wv 6s ease-in-out infinite alternate-reverse}
+@keyframes f{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes tw{0%,100%{opacity:.15}50%{opacity:1}}
+@keyframes fl{from{transform:translate(0,0)}to{transform:translate(40px,18px)}}
+@keyframes wv{from{transform:translateX(0)}to{transform:translateX(-70px)}}
 </style>
-<rect width="854" height="230" fill="url(#g)"/>
-<g class="w"><path d="M0 185 C150 150 300 225 460 190 C620 155 760 215 920 185 L920 230 L0 230Z" fill="#24c6dc" opacity=".25"/></g>
-<path d="M0 200 C180 170 330 235 500 205 C670 175 760 220 854 200 L854 230 L0 230Z" fill="#ffffff" opacity=".12"/>
-<text x="427" y="95" text-anchor="middle" class="t">Ahmed Idriss</text>
-<text x="427" y="135" text-anchor="middle" class="s">Data &amp; Automation Engineer • AI • AWS • Python • Data Governance</text>
+<rect width="854" height="250" fill="url(#g)"/>
+<circle class="a" cx="140" cy="70" r="120" fill="url(#o2)"/><circle class="b" cx="720" cy="60" r="140" fill="url(#o1)"/>
+<circle cx="336" cy="43" r="2" fill="#fff" class="s2"/><circle cx="54" cy="23" r="1" fill="#fff" class="s1"/><circle cx="601" cy="19" r="1" fill="#fff" class="s0"/><circle cx="93" cy="116" r="2" fill="#fff" class="s0"/><circle cx="251" cy="28" r="2" fill="#fff" class="s0"/><circle cx="584" cy="36" r="1" fill="#fff" class="s2"/><circle cx="647" cy="154" r="1" fill="#fff" class="s2"/><circle cx="604" cy="106" r="1" fill="#fff" class="s0"/><circle cx="52" cy="147" r="1" fill="#fff" class="s1"/><circle cx="434" cy="41" r="1" fill="#fff" class="s2"/><circle cx="320" cy="148" r="1" fill="#fff" class="s0"/><circle cx="600" cy="151" r="1" fill="#fff" class="s1"/><circle cx="104" cy="145" r="1" fill="#fff" class="s2"/><circle cx="66" cy="163" r="1" fill="#fff" class="s1"/><circle cx="701" cy="141" r="2" fill="#fff" class="s1"/><circle cx="481" cy="154" r="2" fill="#fff" class="s1"/><circle cx="311" cy="68" r="1" fill="#fff" class="s2"/><circle cx="803" cy="67" r="1" fill="#fff" class="s2"/><circle cx="312" cy="139" r="2" fill="#fff" class="s1"/><circle cx="751" cy="119" r="1.5" fill="#fff" class="s2"/><circle cx="79" cy="35" r="2" fill="#fff" class="s0"/><circle cx="780" cy="92" r="1" fill="#fff" class="s1"/><circle cx="436" cy="15" r="1" fill="#fff" class="s2"/><circle cx="591" cy="85" r="1.5" fill="#fff" class="s2"/><circle cx="363" cy="157" r="2" fill="#fff" class="s2"/><circle cx="821" cy="121" r="1" fill="#fff" class="s0"/><circle cx="281" cy="126" r="1" fill="#fff" class="s0"/><circle cx="753" cy="84" r="2" fill="#fff" class="s1"/><circle cx="738" cy="103" r="1.5" fill="#fff" class="s0"/><circle cx="477" cy="95" r="1" fill="#fff" class="s2"/><circle cx="124" cy="131" r="1" fill="#fff" class="s0"/><circle cx="791" cy="78" r="1" fill="#fff" class="s2"/><circle cx="258" cy="106" r="2" fill="#fff" class="s1"/><circle cx="87" cy="47" r="2" fill="#fff" class="s1"/><circle cx="567" cy="76" r="1" fill="#fff" class="s1"/><circle cx="568" cy="76" r="2" fill="#fff" class="s1"/><circle cx="704" cy="102" r="1" fill="#fff" class="s0"/><circle cx="89" cy="50" r="1" fill="#fff" class="s0"/><circle cx="679" cy="64" r="1" fill="#fff" class="s1"/><circle cx="608" cy="51" r="1.5" fill="#fff" class="s1"/><circle cx="9" cy="42" r="2" fill="#fff" class="s2"/><circle cx="383" cy="161" r="1.5" fill="#fff" class="s0"/><circle cx="712" cy="136" r="1" fill="#fff" class="s1"/><circle cx="803" cy="148" r="2" fill="#fff" class="s1"/><circle cx="413" cy="105" r="1" fill="#fff" class="s1"/>
+<g class="w1"><path d="M0 200 C150 165 300 240 460 205 C620 170 760 230 930 200 L930 250 L0 250Z" fill="#24c6dc" opacity=".22"/></g>
+<g class="w2"><path d="M0 218 C180 190 330 250 500 222 C670 194 780 240 930 218 L930 250 L0 250Z" fill="#ffffff" opacity=".10"/></g>
+<text x="427" y="92" text-anchor="middle" class="t">Yahye Mohamed Awil</text>
+<text x="427" y="130" text-anchor="middle" class="sub">AI Agent Engineer • Full-Stack • AWS • Terraform</text>
+<text x="427" y="160" text-anchor="middle" class="tag">I build AI agents businesses can trust — governed, audited, deployed on AWS</text>
 </svg>

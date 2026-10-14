@@ -1,0 +1,55 @@
+name: Tic-tac-toe
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: tictactoe
+  cancel-in-progress: false
+
+jobs:
+  play:
+    if: startsWith(github.event.issue.title, 'ttt|')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Play move
+        id: play
+        env:
+          TITLE: ${{ github.event.issue.title }}
+          PLAYER: ${{ github.event.issue.user.login }}
+        run: |
+          reply="$(python .github/scripts/ttt.py "$TITLE" "$PLAYER")"
+          {
+            echo "reply<<EOF"
+            echo "$reply"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+      - name: Commit board
+        env:
+          PLAYER: ${{ github.event.issue.user.login }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md game/ttt.json
+          git diff --cached --quiet && exit 0
+          git commit -m "Tic-tac-toe move by @$PLAYER"
+          git push
+      - name: Reply and close issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPLY: ${{ steps.play.outputs.reply }}
+          NUMBER: ${{ github.event.issue.number }}
+        run: |
+          gh issue comment "$NUMBER" --repo "$GITHUB_REPOSITORY" --body "$REPLY
+
+          [⬅️ Back to the profile](https://github.com/${GITHUB_REPOSITORY%%/*})"
+          gh issue close "$NUMBER" --repo "$GITHUB_REPOSITORY"
