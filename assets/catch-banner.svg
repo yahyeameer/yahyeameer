@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="854" height="200" viewBox="0 0 854 200">
+<defs>
+<linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0f0c29"/><stop offset=".55" stop-color="#302b63"/><stop offset="1" stop-color="#1b6f8a"/></linearGradient>
+<linearGradient id="btn" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8a2be2"/><stop offset="1" stop-color="#24c6dc"/></linearGradient>
+</defs>
+<style>
+.t{font:800 30px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#fff}
+.s{font:500 15px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#cfeff6}
+.b{font:800 17px -apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;fill:#fff}
+.e{font:42px sans-serif}
+.m{animation:run 4s ease-in-out infinite}
+.c{animation:chase 4s ease-in-out infinite}
+.pulse{animation:p 1.6s ease-in-out infinite;transform-origin:427px 160px}
+@keyframes run{0%{transform:translate(520px,40px)}20%{transform:translate(700px,90px)}40%{transform:translate(610px,20px)}60%{transform:translate(760px,30px)}80%{transform:translate(560px,95px)}100%{transform:translate(520px,40px)}}
+@keyframes chase{0%{transform:translate(430px,95px)}20%{transform:translate(600px,60px)}40%{transform:translate(680px,75px)}60%{transform:translate(650px,40px)}80%{transform:translate(690px,70px)}100%{transform:translate(430px,95px)}}
+@keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+</style>
+<rect width="854" height="200" rx="18" fill="url(#g)"/>
+<text x="40" y="70" class="t">🐭 Catch Me If You Can</text>
+<text x="40" y="100" class="s">The mouse runs from your cursor. How many can you catch in 30 seconds?</text>
+<g class="m"><text class="e" x="0" y="40">🐭</text></g>
+<g class="c"><path d="M0 0 L0 30 L8 22 L14 36 L20 33 L14 20 L25 20 Z" fill="#fff" stroke="#0f0c29" stroke-width="2"/></g>
+<g class="pulse"><rect x="317" y="134" width="220" height="48" rx="14" fill="url(#btn)"/><text x="427" y="165" text-anchor="middle" class="b">▶ CLICK TO PLAY</text></g>
+</svg>

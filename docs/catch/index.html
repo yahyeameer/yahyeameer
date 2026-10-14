@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<title>Catch Me If You Can — Yahye Mohamed Awil</title>
+<meta name="description" content="A tiny game from Yahye's GitHub profile: catch the mouse before time runs out.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐭</text></svg>">
+<style>
+  :root {
+    --bg1: #0f0c29; --bg2: #302b63; --cyan: #24c6dc; --purple: #8a2be2;
+    --coral: #ff6b6b; --gold: #f7b731; --text: #e6f7fb; --muted: #9fb3c8;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    color: var(--text);
+    background: radial-gradient(circle at 20% 15%, rgba(138,43,226,.35), transparent 45%),
+                radial-gradient(circle at 85% 80%, rgba(36,198,220,.30), transparent 45%),
+                linear-gradient(135deg, var(--bg1), var(--bg2));
+    user-select: none; -webkit-user-select: none; touch-action: none;
+  }
+  #arena { position: fixed; inset: 0; cursor: crosshair; }
+  .hud {
+    position: fixed; top: 12px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; z-index: 5; flex-wrap: wrap; justify-content: center;
+    max-width: calc(100% - 24px);
+  }
+  .pill {
+    background: rgba(13,17,23,.65); border: 1px solid rgba(255,255,255,.12);
+    padding: 8px 14px; border-radius: 999px; font-weight: 700; font-size: 15px;
+    backdrop-filter: blur(6px); white-space: nowrap;
+  }
+  .pill b { color: var(--cyan); }
+  #mouse {
+    position: absolute; left: 0; top: 0; width: 64px; height: 64px;
+    display: grid; place-items: center; font-size: 46px; line-height: 1;
+    transform: translate(-50%, -50%); transition: transform .08s;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,.45)); cursor: pointer; z-index: 3;
+  }
+  #mouse.flip span { display: inline-block; transform: scaleX(-1); }
+  #mouse.hit { animation: hit .35s ease-out; }
+  @keyframes hit { 50% { transform: translate(-50%, -50%) scale(1.5) rotate(20deg); } }
+  .pop {
+    position: absolute; pointer-events: none; font-weight: 800; font-size: 22px; color: var(--gold);
+    transform: translate(-50%, -50%); animation: pop .8s ease-out forwards; z-index: 4;
+  }
+  @keyframes pop { to { opacity: 0; transform: translate(-50%, -140%) scale(1.3); } }
+  .cheese { position: absolute; font-size: 26px; opacity: .25; pointer-events: none; }
+  .panel {
+    position: fixed; inset: 0; display: grid; place-items: center; z-index: 10;
+    background: rgba(8,10,25,.55); backdrop-filter: blur(4px); padding: 16px;
+  }
+  .card {
+    width: min(420px, 100%); text-align: center; padding: 28px 22px;
+    background: rgba(22,27,51,.92); border: 1px solid rgba(36,198,220,.35);
+    border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,.45);
+  }
+  .card h1 { margin: 6px 0 4px; font-size: 28px; }
+  .card p { color: var(--muted); margin: 8px 0 18px; line-height: 1.45; }
+  .big { font-size: 56px; }
+  button {
+    font: inherit; font-weight: 800; font-size: 17px; color: #fff; cursor: pointer;
+    border: 0; border-radius: 12px; padding: 13px 26px;
+    background: linear-gradient(90deg, var(--purple), var(--cyan));
+    box-shadow: 0 8px 22px rgba(36,198,220,.35);
+  }
+  button:active { transform: scale(.97); }
+  a { color: var(--cyan); }
+  .small { font-size: 13px; color: var(--muted); margin-top: 16px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div id="arena"></div>
+
+<div class="hud">
+  <div class="pill">🧀 Caught: <b id="score">0</b></div>
+  <div class="pill">⏱️ <b id="time">30</b>s</div>
+  <div class="pill">🏆 Best: <b id="best">0</b></div>
+</div>
+
+<div id="mouse" class="hidden" aria-label="mouse"><span>🐭</span></div>
+
+<div id="start" class="panel">
+  <div class="card">
+    <div class="big">🐭</div>
+    <h1>Catch Me If You Can</h1>
+    <p>The mouse runs away from your cursor.<br>Click or tap it as many times as you can in <b>30 seconds</b>. It gets faster every catch!</p>
+    <button id="play">▶ Play</button>
+    <div class="small">A tiny game from <a href="https://github.com/yahyeameer" target="_top">Yahye's GitHub profile</a></div>
+  </div>
+</div>
+
+<div id="over" class="panel hidden">
+  <div class="card">
+    <div class="big" id="overEmoji">🏆</div>
+    <h1 id="overTitle">Time's up!</h1>
+    <p id="overText"></p>
+    <button id="again">🔄 Play again</button>
+    <div class="small"><a href="https://github.com/yahyeameer" target="_top">⬅ Back to the profile</a></div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const ROUND = 30;
+  const arena = document.getElementById("arena");
+  const mouse = document.getElementById("mouse");
+  const scoreEl = document.getElementById("score");
+  const timeEl = document.getElementById("time");
+  const bestEl = document.getElementById("best");
+  const startPanel = document.getElementById("start");
+  const overPanel = document.getElementById("over");
+
+  let best = 0;
+  try { best = parseInt(localStorage.getItem("catch-best") || "0", 10) || 0; } catch (e) {}
+  bestEl.textContent = best;
+
+  // decorative cheese
+  for (let i = 0; i < 10; i++) {
+    const c = document.createElement("div");
+    c.className = "cheese"; c.textContent = "🧀";
+    c.style.left = Math.random() * 95 + "vw"; c.style.top = (10 + Math.random() * 85) + "vh";
+    arena.appendChild(c);
+  }
+
+  const state = { x: 0, y: 0, vx: 0, vy: 0, px: -999, py: -999, score: 0, left: ROUND, running: false, last: 0, endAt: 0 };
+
+  function size() { return { w: window.innerWidth, h: window.innerHeight }; }
+
+  function place() {
+    const { w, h } = size();
+    state.x = 60 + Math.random() * (w - 120);
+    state.y = 90 + Math.random() * (h - 150);
+    state.vx = 0; state.vy = 0;
+  }
+
+  function pointer(e) {
+    const p = e.touches ? e.touches[0] : e;
+    if (!p) return;
+    state.px = p.clientX; state.py = p.clientY;
+  }
+  window.addEventListener("pointermove", pointer, { passive: true });
+  window.addEventListener("touchmove", pointer, { passive: true });
+  window.addEventListener("pointerdown", pointer, { passive: true });
+
+  function speedFactor() { return 1 + state.score * 0.12; }
+
+  function tick(t) {
+    if (!state.running) return;
+    const dt = Math.min(0.05, (t - state.last) / 1000 || 0);
+    state.last = t;
+    const { w, h } = size();
+
+    // flee from the pointer when it gets close
+    const dx = state.x - state.px, dy = state.y - state.py;
+    const dist = Math.hypot(dx, dy) || 1;
+    const fear = 190 + state.score * 6;
+    if (dist < fear) {
+      const push = (1 - dist / fear) * 2600 * speedFactor();
+      state.vx += (dx / dist) * push * dt;
+      state.vy += (dy / dist) * push * dt;
+    } else {
+      // wander a little so it never sits still
+      state.vx += (Math.random() - .5) * 400 * dt;
+      state.vy += (Math.random() - .5) * 400 * dt;
+    }
+
+    // speed cap and friction
+    const max = 520 * speedFactor();
+    const sp = Math.hypot(state.vx, state.vy);
+    if (sp > max) { state.vx *= max / sp; state.vy *= max / sp; }
+    state.vx *= 0.92; state.vy *= 0.92;
+
+    state.x += state.vx * dt; state.y += state.vy * dt;
+
+    // bounce off walls; if cornered, slip along the edge
+    const m = 32, top = 70;
+    if (state.x < m) { state.x = m; state.vx = Math.abs(state.vx) + 60; }
+    if (state.x > w - m) { state.x = w - m; state.vx = -Math.abs(state.vx) - 60; }
+    if (state.y < top) { state.y = top; state.vy = Math.abs(state.vy) + 60; }
+    if (state.y > h - m) { state.y = h - m; state.vy = -Math.abs(state.vy) - 60; }
+
+    mouse.style.left = state.x + "px";
+    mouse.style.top = state.y + "px";
+    mouse.classList.toggle("flip", state.vx > 0);
+
+    const remaining = Math.max(0, Math.ceil((state.endAt - performance.now()) / 1000));
+    if (remaining !== state.left) { state.left = remaining; timeEl.textContent = remaining; }
+    if (remaining <= 0) return end();
+    requestAnimationFrame(tick);
+  }
+
+  function popText(x, y, text) {
+    const p = document.createElement("div");
+    p.className = "pop"; p.textContent = text;
+    p.style.left = x + "px"; p.style.top = y + "px";
+    document.body.appendChild(p);
+    setTimeout(() => p.remove(), 800);
+  }
+
+  function caught(e) {
+    if (!state.running) return;
+    e.preventDefault(); e.stopPropagation();
+    state.score++;
+    scoreEl.textContent = state.score;
+    popText(state.x, state.y, ["+1 🧀", "Got it!", "Nice!", "+1", "Quick!"][state.score % 5]);
+    mouse.classList.remove("hit"); void mouse.offsetWidth; mouse.classList.add("hit");
+    if (navigator.vibrate) { try { navigator.vibrate(30); } catch (err) {} }
+    place();
+  }
+  mouse.addEventListener("pointerdown", caught);
+
+  function start() {
+    state.score = 0; scoreEl.textContent = "0";
+    state.left = ROUND; timeEl.textContent = ROUND;
+    startPanel.classList.add("hidden"); overPanel.classList.add("hidden");
+    mouse.classList.remove("hidden");
+    place();
+    state.running = true;
+    state.endAt = performance.now() + ROUND * 1000;
+    state.last = performance.now();
+    requestAnimationFrame(tick);
+  }
+
+  function end() {
+    state.running = false;
+    mouse.classList.add("hidden");
+    const s = state.score;
+    let newBest = false;
+    if (s > best) {
+      best = s; newBest = true; bestEl.textContent = best;
+      try { localStorage.setItem("catch-best", String(best)); } catch (e) {}
+    }
+    const rank = s >= 25 ? ["🐱", "Cat-level reflexes!"] : s >= 15 ? ["⚡", "Lightning hands!"] : s >= 8 ? ["👏", "Nice catching!"] : ["🐭", "The mouse wins this time!"];
+    document.getElementById("overEmoji").textContent = newBest && s > 0 ? "🏆" : rank[0];
+    document.getElementById("overTitle").textContent = newBest && s > 0 ? "New best score!" : rank[1];
+    document.getElementById("overText").innerHTML =
+      "You caught the mouse <b>" + s + "</b> time" + (s === 1 ? "" : "s") + ".<br>Your best: <b>" + best + "</b>";
+    overPanel.classList.remove("hidden");
+  }
+
+  document.getElementById("play").addEventListener("click", start);
+  document.getElementById("again").addEventListener("click", start);
+})();
+</script>
+</body>
+</html>

@@ -311,6 +311,13 @@ Teacher and student dashboards with attendance, scheduling and progress tracking
 <!-- ═══════════════════════════ PLAY ═══════════════════════════ -->
 <img src="assets/section-play.svg" width="100%" alt="Play With Me"/>
 
+### 🐭 Catch Me If You Can
+
+<p align="center">
+  <a href="https://yahyeameer.github.io/yahyeameer/catch/"><img src="assets/catch-banner.svg" width="100%" alt="Catch Me If You Can — click to play"/></a>
+</p>
+<p align="center"><sub>Opens instantly in your browser — works with a mouse or by tapping on your phone.</sub></p>
+
 ### ❌⭕ Tic-Tac-Toe vs. my bot
 
 <p align="center"><sub>Click a square → GitHub opens an issue → press <b>Create</b> → a GitHub Action plays my move and updates this board in about a minute.</sub></p>
